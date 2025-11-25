@@ -40,19 +40,47 @@ export function activate(context: vscode.ExtensionContext) {
             outputChannel.appendLine(`  ${index}: Name: ${term.name}`);
         });
 
-        // 5. Tab Groups
+        // 5. Tab Groups (Detailed)
         outputChannel.appendLine("\n[Tab Groups]");
         vscode.window.tabGroups.all.forEach((group, index) => {
             outputChannel.appendLine(`  Group ${index}: Active: ${group.isActive}, ViewColumn: ${group.viewColumn}`);
             group.tabs.forEach((tab, tIndex) => {
-                outputChannel.appendLine(`    Tab ${tIndex}: Label: ${tab.label}, Active: ${tab.isActive}`);
+                let inputType = "Unknown";
+                let inputDetails = "";
+
+                if (tab.input instanceof vscode.TabInputText) {
+                    inputType = "Text";
+                    inputDetails = tab.input.uri.toString();
+                } else if (tab.input instanceof vscode.TabInputTextDiff) {
+                    inputType = "TextDiff";
+                    inputDetails = `${tab.input.original.toString()} <-> ${tab.input.modified.toString()}`;
+                } else if (tab.input instanceof vscode.TabInputCustom) {
+                    inputType = "Custom";
+                    inputDetails = tab.input.uri.toString();
+                } else if (tab.input instanceof vscode.TabInputWebview) {
+                    inputType = "Webview";
+                    inputDetails = `Type: ${tab.input.viewType}`;
+                } else if (tab.input instanceof vscode.TabInputNotebook) {
+                    inputType = "Notebook";
+                    inputDetails = tab.input.uri.toString();
+                } else if (tab.input instanceof vscode.TabInputTerminal) {
+                    inputType = "Terminal";
+                    inputDetails = "Terminal Tab";
+                }
+
+                outputChannel.appendLine(`    Tab ${tIndex}: Label: "${tab.label}", Active: ${tab.isActive}, Type: ${inputType}, Details: ${inputDetails}`);
             });
         });
 
         outputChannel.appendLine("\n--- End Log ---");
 
         // Write to file for the agent to read
-        const logPath = path.join(context.extensionPath, 'ui-state.log');
+        let logPath = '';
+        if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
+            logPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'ui-state.log');
+        } else {
+            logPath = path.join(context.extensionPath, 'ui-state.log');
+        }
 
         let logContent = `Timestamp: ${new Date().toISOString()}\n`;
         logContent += "\n[Visible Text Editors]\n";
@@ -83,7 +111,30 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.tabGroups.all.forEach((group, index) => {
             logContent += `  Group ${index}: Active: ${group.isActive}, ViewColumn: ${group.viewColumn}\n`;
             group.tabs.forEach((tab, tIndex) => {
-                logContent += `    Tab ${tIndex}: Label: ${tab.label}, Active: ${tab.isActive}\n`;
+                let inputType = "Unknown";
+                let inputDetails = "";
+
+                if (tab.input instanceof vscode.TabInputText) {
+                    inputType = "Text";
+                    inputDetails = tab.input.uri.toString();
+                } else if (tab.input instanceof vscode.TabInputTextDiff) {
+                    inputType = "TextDiff";
+                    inputDetails = `${tab.input.original.toString()} <-> ${tab.input.modified.toString()}`;
+                } else if (tab.input instanceof vscode.TabInputCustom) {
+                    inputType = "Custom";
+                    inputDetails = tab.input.uri.toString();
+                } else if (tab.input instanceof vscode.TabInputWebview) {
+                    inputType = "Webview";
+                    inputDetails = `Type: ${tab.input.viewType}`;
+                } else if (tab.input instanceof vscode.TabInputNotebook) {
+                    inputType = "Notebook";
+                    inputDetails = tab.input.uri.toString();
+                } else if (tab.input instanceof vscode.TabInputTerminal) {
+                    inputType = "Terminal";
+                    inputDetails = "Terminal Tab";
+                }
+
+                logContent += `    Tab ${tIndex}: Label: "${tab.label}", Active: ${tab.isActive}, Type: ${inputType}, Details: ${inputDetails}\n`;
             });
         });
 
@@ -99,6 +150,48 @@ export function activate(context: vscode.ExtensionContext) {
     // Also register command if they want to run it manually again
     let disposable = vscode.commands.registerCommand('ui-probe.logState', runProbe);
     context.subscriptions.push(disposable);
+
+    // --- Chameleon Test ---
+    const chameleonDecoration = vscode.window.createTextEditorDecorationType({
+        backgroundColor: '#000033', // Dark Blue
+        color: '#FFD700',           // Gold
+        border: '1px solid #FFD700',
+        isWholeLine: true,
+        after: {
+            contentText: ' [CHAMELEON MODE]',
+            color: '#FFD700',
+            fontWeight: 'bold'
+        }
+    });
+
+    let disposableChameleon = vscode.commands.registerCommand('ui-probe.testCapabilities', async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            vscode.window.showErrorMessage('No active editor to transform!');
+            return;
+        }
+
+        // 1. Apply Styling
+        const fullRange = new vscode.Range(
+            editor.document.positionAt(0),
+            editor.document.positionAt(editor.document.getText().length)
+        );
+        editor.setDecorations(chameleonDecoration, [fullRange]);
+        vscode.window.showInformationMessage('Chameleon: Colors applied!');
+
+        // 2. Test Positioning (Move to Side)
+        // Wait a moment so the user sees the color change first
+        setTimeout(async () => {
+            try {
+                // Attempt to move to the side (creates a split if needed, or moves to existing group)
+                await vscode.commands.executeCommand('workbench.action.moveEditorToNextGroup');
+                vscode.window.showInformationMessage('Chameleon: Moved to next group!');
+            } catch (error) {
+                vscode.window.showErrorMessage(`Chameleon: Failed to move. ${error}`);
+            }
+        }, 1000);
+    });
+    context.subscriptions.push(disposableChameleon);
 
     // --- Event Listeners ---
     context.subscriptions.push(
