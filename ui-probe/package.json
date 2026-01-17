@@ -1,0 +1,38 @@
+{
+  "name": "ui-probe",
+  "displayName": "UI Probe",
+  "publisher": "local",
+  "description": "Probes VS Code UI state for agent-based UI control exploration",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ui-probe.logState",
+        "title": "UI Probe: Log State"
+      },
+      {
+        "command": "ui-probe.testCapabilities",
+        "title": "UI Probe: Test Chameleon Capabilities"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "bun run compile",
+    "compile": "bun x tsc -p ./",
+    "watch": "bun x tsc -watch -p ./",
+    "clean": "rm -rf out"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.90.0",
+    "@types/node": "20.x",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,15 @@
+node_modules/
+out/
+*.vsix
+
+.vscode-test/
+
+# Logs
+*.log
+ui-state.log
+
+# Bun
+bun.lock
+
+# Windows artifacts
+nul
