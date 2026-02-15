@@ -49,10 +49,10 @@ This document explains the role of **tmux** in the IDEAsPlatform architecture an
 
 ## The Core Problem
 
-Agents need to:
+Agents and Steve need to:
 
-- Execute code in multiple languages (Python, JavaScript, Go, etc.)
-- Demonstrate code step-by-step
+- Have a shared executable space for code in multiple languages (Python, JavaScript, Go, etc.)
+- Interactively demonstrate code step-by-step
 - Maintain state across interactions
 - Run long-lived processes
 - Show logs, tests, and runtime behavior in real time
@@ -85,6 +85,7 @@ A tmux script can define:
 - Which windows exist  
 - How panes are arranged  
 - What each pane runs  
+- A robust set of keybindings
 - Pane titles and semantics  
 
 This creates a deterministic environment that agents can rely on.
@@ -101,7 +102,7 @@ No interference. No clutter.
 ### 4. Agent-Friendly I/O
 Agents can:
 
-- Send commands to specific panes  
+- Send commands to specific panes  (prior to an cycle spend deep think on the implications of the tmux session as a unique point of interaction and what ideas can we explore to push the boundaries of this concept)
 - Read output  
 - Demonstrate workflows  
 - Pause between steps  
@@ -233,7 +234,7 @@ Write:
 # Pane 0: developer shell
 ```
 
-Agents rely on these semantics.
+Agents rely on these semantics. Steve can be (indeed, he expects to be) trained to understand them.
 
 ## Step 6: Seed Commands Carefully
 
@@ -268,7 +269,7 @@ tmux/
   README.md
 ```
 
-Document evolution in the README.
+Document evolution in the README - a document that must be maintained diligently.
 
 
 # tmuxPlans/03-layout-spec.md
@@ -277,7 +278,7 @@ Document evolution in the README.
 
 ## Purpose
 
-This document defines the authoritative tmux layout used for agent-driven demonstrations. It includes naming conventions, pane semantics, and the complete annotated script.
+This document defines the authoritative tmux layout used for agent-driven demonstrations. It includes naming conventions, pane semantics, and the complete annotated script. {this is a special note to the Claude session running in VSCode - the layout described here is to be combined with task you've been presented re: a Gas Town-specific TMux layout - use the principles here to inform that layout as well but it doesn't supersede that task}
 
 ## Session Naming
 
