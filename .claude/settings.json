@@ -1,12 +1,22 @@
 {
   "permissions": {
-    "additionalDirectories": [
-      "../"
-    ],
     "allow": [
-      "Bash(bd *)",
-      "Bash(git *)",
-      "Read"
+      "Bash(git:*)",
+      "Bash(gh:*)",
+      "Bash(bd:*)",
+      "Bash(bun:*)",
+      "Bash(npm:*)",
+      "Bash(curl:*)",
+      "Bash(mkdir:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(node:*)",
+      "Bash(timeout:*)",
+      "mcp__fetch__fetch",
+      "mcp__github__*",
+      "Read(*)",
+      "Glob(*)",
+      "Grep(*)"
     ]
   }
 }

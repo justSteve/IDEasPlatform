@@ -1,3 +1,38 @@
+# Auto detect text files and perform LF normalization
+* text=auto
 
-# Use bd merge for beads JSONL files
-.beads/issues.jsonl merge=beads
+# Explicitly declare text files
+*.md text
+*.txt text
+*.json text
+*.yml text
+*.yaml text
+*.js text
+*.ts text
+*.jsx text
+*.tsx text
+*.css text
+*.html text
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+
+# Declare binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.tar binary
+*.db binary
+*.sqlite binary
+
+# Linguist overrides
+*.md linguist-documentation

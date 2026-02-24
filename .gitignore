@@ -1,15 +1,18 @@
-node_modules/
-out/
-*.vsix
+node_modules
+out
 
-.vscode-test/
+.vscode-test
 
-# Logs
-*.log
-ui-state.log
+# Claude Code local settings (NEVER commit)
+.claude/settings.local.json
 
-# Bun
-bun.lock
-
-# Windows artifacts
-nul
+# GT beads runtime
+.beads/beads.db
+.beads/beads.db-shm
+.beads/beads.db-wal
+.beads/daemon.lock
+.beads/daemon.log
+.beads/daemon.pid
+.beads/bd.sock
+.beads/.local_version
+.beads/last-touched
